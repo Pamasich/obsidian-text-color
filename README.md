@@ -1,2 +1,2 @@
 # obsidian-colored-text
-Enables apply any CSS color to text in Obsidian easily.
+Enables applying any CSS color to text in Obsidian easily.
