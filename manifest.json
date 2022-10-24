@@ -1,10 +1,14 @@
 {
     "id": "colored-text",
     "name": "Colored Text",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "minAppVersion": "1.0.0",
     "description": "Allows the use of colored text in Obsidian.",
     "author": "Pamasich",
     "authorUrl": "https://github.com/Pamasich",
-    "isDesktopOnly": true
+    "isDesktopOnly": true,
+    "changelog": {
+        "1.0.1": "Fixed text nodes not being copied",
+        "1.0.0": "Initial release"
+    }
 }

@@ -36,7 +36,7 @@ var ColoredTextPlugin = class extends obsidian.Plugin {
       if (link.getAttribute('href') == 'c') {
         var elem = document.createElement('span');
         elem.style.color = link.hasAttribute('title') ? link.getAttribute('title') : 'inherit';
-        elem.append(...Array.from(link.children));
+        elem.append(...Array.from(link.childNodes));
         link.parentNode.insertBefore(elem, link);
         link.remove();
       }
