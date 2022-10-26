@@ -22,13 +22,15 @@ Object.defineProperties(exports, {
   }
 });
 
+let getTargetNode = () => document.getElementsByClassName("workspace-tab-container")[1];
+
 var ColoredTextPlugin = class extends obsidian.Plugin {
   onload() {
     this.links = document.getElementsByClassName("internal-link");
     if (!this.hasOwnProperty("observer")) {
       this.observer = new MutationObserver(_ => this.onmutation());
     }
-    this.observer.observe(document, {subtree: true, childList: true});
+    this.observer.observe(getTargetNode(), {subtree: true, childList: true});
   }
 
   onmutation() {
