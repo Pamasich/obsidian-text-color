@@ -8,7 +8,7 @@ The above creates a bold yellow "Text".
 
 Any valid [CSS color](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) is supported.
 
-Currently this plugin only works with the reading view. The Live Preview doesn't set the title attribute on links, which makes this method impossible.  
+Currently this plugin only works with the reading view. The Live Preview seems to include neither url nor title in its representation of the link, so I have no clue how to make that work.  
 If you do need text color in the live preview, use HTML:  
 `<span style="color: yellow">Your text</span>`.
 
