@@ -1,17 +1,19 @@
-# Colored Text for Obsidian
+# Text Color for Obsidian
 
-This plugin aims to provide easy text coloring to Obsidian, without having to fall back to HTML or snippets, nor limiting you to only a small subset of colors. Any valid CSS color can be used, including rbg(a), hsl(a), color names ("red"), anything.
+Leverages links with a special syntax to implement text color in Markdown.
 
-This is currently done by abusing the link syntax and replacing links with a special pattern in the reading view with a colored `<span>` element instead, copying over all child elements.
+Example:  
+`[**Text**](c "yellow")`  
+The above creates a bold yellow "Text".
 
-This does not work in the live preview currently, and I don't consider it a priority to change that.
+Any valid [CSS color](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) is supported.
 
-##### Usage
+Currently this plugin only works with the reading view. The Live Preview doesn't set the title attribute on links, which makes this method impossible.  
+If you do need text color in the live preview, use HTML:  
+`<span style="color: yellow">Your text</span>`.
 
-`[Text](c "color")`
-
-You simply create a link, but instead of an address, you put in a `c` followed by a quoted color. This color can be any valid CSS color value.
-
-##### Installation
+### Installation
 
 Take the files in this repository and throw them in a new folder under the `.obsidian/plugins` folder of your vault.
+
+I will apply to have the plugin added to Obsidian's store some other day.
