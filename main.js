@@ -22,30 +22,37 @@ Object.defineProperties(exports, {
   }
 });
 
-let getTargetNode = () => document.getElementsByClassName("workspace-tab-container")[1];
+let workspaceNode;
+let observer;
+let liveLinks;
+
+let getWorkspaceNode = () => Array.from(document.getElementsByClassName('workspace-split'))
+  .filter(elem => elem.classList.contains('mod-root'))[0];
+
+let onMutation = () => {
+  Array.from(liveLinks)
+    .filter(link => link.getAttribute('href') === 'c')
+    .filter(link => link.getAttribute('title') !== undefined)
+    .forEach(link => applyTextColor(link));
+}
+
+let applyTextColor = (link) => {
+  let elem = document.createElement('span');
+  elem.style.color = link.getAttribute('title');
+  elem.append(...Array.from(link.childNodes));
+  link.parentNode.insertBefore(elem, link);
+  link.remove();
+}
 
 var ColoredTextPlugin = class extends obsidian.Plugin {
   onload() {
-    this.links = document.getElementsByClassName("internal-link");
-    if (!this.hasOwnProperty("observer")) {
-      this.observer = new MutationObserver(_ => this.onmutation());
-    }
-    this.observer.observe(getTargetNode(), {subtree: true, childList: true});
-  }
-
-  onmutation() {
-    for (let link of Array.from(this.links)) {
-      if (link.getAttribute('href') == 'c') {
-        var elem = document.createElement('span');
-        elem.style.color = link.hasAttribute('title') ? link.getAttribute('title') : 'inherit';
-        elem.append(...Array.from(link.childNodes));
-        link.parentNode.insertBefore(elem, link);
-        link.remove();
-      }
-    }
+    if (workspaceNode === undefined) workspaceNode = getWorkspaceNode();
+    if (liveLinks === undefined) liveLinks = workspaceNode.getElementsByClassName('internal-link');
+    if (observer === undefined) observer = new MutationObserver(onMutation);
+    observer.observe(workspaceNode, {subtree: true, childList: true});
   }
 
   onunload() {
-    this.observer.disconnect();
+    observer.disconnect();
   }
 }
