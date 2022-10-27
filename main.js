@@ -17,22 +17,40 @@ for (let key of Object.getOwnPropertyNames(obsidian_import)) {
 Object.defineProperties(exports, {
   __esModule: { value: true },
   default: { 
-    get: () => ColoredTextPlugin,
+    get: () => TextColorPlugin,
     enumerable: true
   }
 });
 
-let workspaceNode;
+// Start of plugin code
+
+// A MutationObserver is used to trigger checking for new links to convert
 let observer;
+// A live collection of elligible links
 let liveLinks;
 
-let getWorkspaceNode = () => Array.from(document.getElementsByClassName('workspace-split'))
-  .filter(elem => elem.classList.contains('mod-root'))[0];
+let getWorkspaceNode = () => {
+  return new Promise(resolve => {
+    // If it already exists, return it
+    let found = document.querySelector('.workspace-split.mod-root');
+    if (found) return resolve(found);
+    // If it doesn't exist yet, wait for it to appear
+    const observer = new MutationObserver(() => {
+      found = document.querySelector('.workspace-split.mod-root');
+      if (found) {
+        resolve(found);
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  })
+}
 
+// Do this when the MutationObserver triggers.
 let onMutation = () => {
   Array.from(liveLinks)
     .filter(link => link.getAttribute('href') === 'c')
-    .filter(link => link.getAttribute('title') !== undefined)
+    .filter(link => link.getAttribute('title'))
     .forEach(link => applyTextColor(link));
 }
 
@@ -44,12 +62,13 @@ let applyTextColor = (link) => {
   link.remove();
 }
 
-var ColoredTextPlugin = class extends obsidian.Plugin {
+var TextColorPlugin = class extends obsidian.Plugin {
   onload() {
-    if (workspaceNode === undefined) workspaceNode = getWorkspaceNode();
-    if (liveLinks === undefined) liveLinks = workspaceNode.getElementsByClassName('internal-link');
-    if (observer === undefined) observer = new MutationObserver(onMutation);
-    observer.observe(workspaceNode, {subtree: true, childList: true});
+    getWorkspaceNode().then(workspaceNode => {
+      if (liveLinks === undefined) liveLinks = workspaceNode.getElementsByClassName('internal-link');
+      if (observer === undefined) observer = new MutationObserver(onMutation);
+      observer.observe(workspaceNode, {subtree: true, childList: true});
+    });
   }
 
   onunload() {
