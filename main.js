@@ -29,30 +29,26 @@ let observer;
 // A live collection of elligible links
 let liveLinks;
 
-let getWorkspaceNode = () => {
-  return new Promise(resolve => {
-    // If it already exists, return it
-    let found = document.querySelector('.workspace-split.mod-root');
-    if (found) return resolve(found);
-    // If it doesn't exist yet, wait for it to appear
-    const observer = new MutationObserver(() => {
-      found = document.querySelector('.workspace-split.mod-root');
-      if (found) {
-        resolve(found);
-        observer.disconnect();
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  })
-}
+let getWorkspaceNode = () => new Promise(resolve => {
+  // If it already exists, return it
+  let found = document.querySelector('.workspace-split.mod-root');
+  if (found) return resolve(found);
+  // If it doesn't exist yet, wait for it to appear
+  const observer = new MutationObserver(() => {
+    found = document.querySelector('.workspace-split.mod-root');
+    if (found) {
+      resolve(found);
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
 
 // Do this when the MutationObserver triggers.
-let onMutation = () => {
-  Array.from(liveLinks)
-    .filter(link => link.getAttribute('href') === 'c')
-    .filter(link => link.getAttribute('title'))
-    .forEach(link => applyTextColor(link));
-}
+let onMutation = () => Array.from(liveLinks)
+  .filter(link => link.getAttribute('href') === 'c')
+  .filter(link => link.getAttribute('title'))
+  .forEach(link => applyTextColor(link));
 
 let applyTextColor = (link) => {
   let elem = document.createElement('span');
